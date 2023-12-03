@@ -1,18 +1,10 @@
 package main
 
 import (
-	"bufio"
+	"aoc/utils"
 	"fmt"
-	"os"
-	"path"
 	"strconv"
 )
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
 
 func getFirstNumChar(line string) string {
 	for _, ch := range line {
@@ -20,7 +12,7 @@ func getFirstNumChar(line string) string {
 			return string(ch)
 		}
 	}
-	return ""
+	return ""	
 }
 
 func reverseString(s string) string {
@@ -31,39 +23,41 @@ func reverseString(s string) string {
 	return string(runes)
 }
 
-func main() {
+func p1() {
 	// open the doc
 	// go through each line
 	//// in each line find the end num chars and join them
 	// convert those num strings to numbers
 	//add them
 
-	// ALWAYS RUN THIS PROGRAM FROM PROJECT ROOT
-	wdir, err := os.Getwd()
-	check(err)
-
-	file, err := os.Open(path.Join(wdir, "01trebut", "data.txt"))
-	check(err)
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-
+	lines, err := utils.FileToLines("01trebut/data.txt")
+	utils.Check(err)
+	
 	res := 0
 
-	for scanner.Scan() {
-		//getting the current line
-		line := scanner.Text()
-
+	for _, line := range lines {
 		//separating the numChars
 		numStr := getFirstNumChar(line)
 		numStr += getFirstNumChar(reverseString(line))
-
+	
 		//string to num
 		num, err := strconv.Atoi(numStr)
-		check(err)
+		utils.Check(err)
 		res += num
 	}
-	check(scanner.Err())
 
 	fmt.Println("ans is:", res)
+}
+
+func p2() {
+	//get each line
+	//do a front scan
+	//do a back scan
+	//join the digits
+	// add the nums
+}
+
+func main() {
+	p1()
+	p2()
 }

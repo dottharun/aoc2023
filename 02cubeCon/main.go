@@ -1,38 +1,11 @@
 package main
 
 import (
-	"bufio"
+	"aoc/utils"
 	"fmt"
-	"os"
-	"path"
 	"strconv"
 	"strings"
 )
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
-func fileToLines(filePath string) ([]string, error) {
-	wdir, err := os.Getwd()
-	check(err)
-
-	file, err := os.Open(path.Join(wdir, filePath))
-	check(err)
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-
-	var lines []string
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	check(scanner.Err())
-
-	return lines, nil
-}
 
 type BallSet struct {
 	red   int
@@ -51,7 +24,7 @@ func parseRound(str string) BallSet {
 		parts := strings.Split(show, " ")
 
 		count, err := strconv.Atoi(parts[0])
-		check(err)
+		utils.Check(err)
 
 		switch parts[1] {
 		case "red":
@@ -77,7 +50,7 @@ func parseGame(line string) (int, bool, BallSet) {
 	parts := strings.Split(line, ": ")
 	gameInfo, game := parts[0], parts[1]
 	id, err := strconv.Atoi(strings.Split(gameInfo, " ")[1])
-	check(err)
+	utils.Check(err)
 
 	//convert game to rounds
 	rounds := strings.Split(game, "; ")
@@ -102,13 +75,13 @@ func parseGame(line string) (int, bool, BallSet) {
 	return id, isValid, minBalls
 }
 
-func Solve() {
+func Part1() {
 	//get file to string arr
 	//parse game to return the game id and valid are not
 	//add the passed game numbers
 
-	lines, err := fileToLines("02cubeCon/data.txt")
-	check(err)
+	lines, err := utils.FileToLines("02cubeCon/data.txt")
+	utils.Check(err)
 
 	sum := 0
 
@@ -125,9 +98,9 @@ func Solve() {
 	fmt.Println("p1 answer is: ", sum)
 }
 
-func Solve2() {
-	lines, err := fileToLines("02cubeCon/data.txt")
-	check(err)
+func Part2() {
+	lines, err := utils.FileToLines("02cubeCon/data.txt")
+	utils.Check(err)
 
 	mulSum := 0
 
@@ -142,6 +115,6 @@ func Solve2() {
 }
 
 func main() {
-	// Solve()
-	Solve2()
+	Part1()
+	Part2()
 }
