@@ -34,16 +34,16 @@ func fileToLines(filePath string) ([]string, error) {
 	return lines, nil
 }
 
-type roundData struct {
+type BallSet struct {
 	red   int
 	blue  int
 	green int
 }
 
-func parseRound(str string) roundData {
+func parseRound(str string) BallSet {
 	shows := strings.Split(str, ", ")
 
-	round := roundData{0, 0, 0}
+	round := BallSet{0, 0, 0}
 
 	for _, show := range shows {
 		show = strings.TrimSpace(show)
@@ -72,8 +72,8 @@ var targetRed int = 12
 var targetGreen int = 13
 var targetBlue int = 14
 
-// gives game's id and its validity
-func parseGame(line string) (int, bool) {
+// gives game's id , its validity, minimum possible BallSet for the entire game
+func parseGame(line string) (int, bool, BallSet) {
 	parts := strings.Split(line, ": ")
 	gameInfo, game := parts[0], parts[1]
 	id, err := strconv.Atoi(strings.Split(gameInfo, " ")[1])
@@ -84,15 +84,22 @@ func parseGame(line string) (int, bool) {
 
 	isValid := true
 
+	minBalls := BallSet{0, 0, 0}
+
 	for _, roundStr := range rounds {
 		round := parseRound(roundStr)
 
 		if round.red > targetRed || round.blue > targetBlue || round.green > targetGreen {
 			isValid = false
 		}
+
+		//finding min balls needed
+		minBalls.red = max(minBalls.red, round.red)
+		minBalls.green = max(minBalls.green, round.green)
+		minBalls.blue = max(minBalls.blue, round.blue)
 	}
 
-	return id, isValid
+	return id, isValid, minBalls
 }
 
 func Solve() {
@@ -106,7 +113,7 @@ func Solve() {
 	sum := 0
 
 	for _, line := range lines {
-		id, isValid := parseGame(line)
+		id, isValid, _ := parseGame(line)
 
 		fmt.Printf("id is %v, its validity %v \n", id, isValid)
 
@@ -115,9 +122,26 @@ func Solve() {
 		}
 	}
 
-	fmt.Print(sum)
+	fmt.Println("p1 answer is: ", sum)
+}
+
+func Solve2() {
+	lines, err := fileToLines("02cubeCon/data.txt")
+	check(err)
+
+	mulSum := 0
+
+	for _, line := range lines {
+		_, _, minBallsNeeded := parseGame(line)
+
+		mulSum += (minBallsNeeded.red * minBallsNeeded.green * minBallsNeeded.blue)
+
+	}
+
+	fmt.Println(mulSum)
 }
 
 func main() {
-	Solve()
+	// Solve()
+	Solve2()
 }
