@@ -14,14 +14,13 @@ func check(e error) {
 	}
 }
 
-func getFirstNumChar(line string) (result string) {
+func getFirstNumChar(line string) string {
 	for _, ch := range line {
 		if ch >= '0' && ch <= '9' {
-			result = string(ch)
-			break
+			return string(ch)
 		}
 	}
-	return
+	return ""
 }
 
 func reverseString(s string) string {
@@ -33,8 +32,6 @@ func reverseString(s string) string {
 }
 
 func main() {
-	fmt.Println("Starting")
-
 	// open the doc
 	// go through each line
 	//// in each line find the end num chars and join them
